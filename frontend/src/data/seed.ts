@@ -1,7 +1,13 @@
-import type { EntryRow } from './types'
+import type { EntryRow, MaintenanceOrder, ValveCheckItem } from './types'
 
 // 示例数据：首次打开时播种，之后浏览器里的改动优先，重置才会回到这份。
-export const SEED_ROWS: Record<string, EntryRow[]> = {
+type SeedState = {
+  entries: Record<string, EntryRow[]>
+  maintenanceOrders: MaintenanceOrder[]
+  valveChecks: ValveCheckItem[]
+}
+
+const SEED_ENTRIES: Record<string, EntryRow[]> = {
   "heatstation": [
     {
       "id": 1,
@@ -56,7 +62,7 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
       "起点": "一次管网样例1",
       "终点": "一次管网样例1",
       "公称管径": "一次管网样例1",
-      "设计压力": "一次管网样例1",
+      "设计压力": "1.6",
       "敷设方式": "一次管网样例1",
       "保温形式": "一次管网样例1",
       "管段状态": "一次管网样例1"
@@ -70,7 +76,7 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
       "起点": "一次管网样例2",
       "终点": "一次管网样例2",
       "公称管径": "一次管网样例2",
-      "设计压力": "一次管网样例2",
+      "设计压力": "1.6",
       "敷设方式": "一次管网样例2",
       "保温形式": "一次管网样例2",
       "管段状态": "一次管网样例2"
@@ -84,7 +90,7 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
       "起点": "一次管网样例3",
       "终点": "一次管网样例3",
       "公称管径": "一次管网样例3",
-      "设计压力": "一次管网样例3",
+      "设计压力": "2.5",
       "敷设方式": "一次管网样例3",
       "保温形式": "一次管网样例3",
       "管段状态": "一次管网样例3"
@@ -361,7 +367,7 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
       "pending": true,
       "abnormal": false,
       "井编号": "VALV-0001",
-      "所属管段": "阀门井维护样例1",
+      "所属管段": "PRIM-0001",
       "井盖状况": "阀门井维护样例1",
       "阀门型号": "阀门井维护样例1",
       "检查人": "阀门井维护样例1",
@@ -375,7 +381,7 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
       "pending": true,
       "abnormal": true,
       "井编号": "VALV-0002",
-      "所属管段": "阀门井维护样例2",
+      "所属管段": "PRIM-0002",
       "井盖状况": "阀门井维护样例2",
       "阀门型号": "阀门井维护样例2",
       "检查人": "阀门井维护样例2",
@@ -389,7 +395,7 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
       "pending": false,
       "abnormal": false,
       "井编号": "VALV-0003",
-      "所属管段": "阀门井维护样例3",
+      "所属管段": "PRIM-0003",
       "井盖状况": "阀门井维护样例3",
       "阀门型号": "阀门井维护样例3",
       "检查人": "阀门井维护样例3",
@@ -795,3 +801,60 @@ export const SEED_ROWS: Record<string, EntryRow[]> = {
     }
   ],
 }
+
+// 检修单留底：已完成的单子也保留，实测值长期可追溯。
+const SEED_MAINTENANCE_ORDERS: MaintenanceOrder[] = [
+  {
+    id: 1,
+    orderNo: "MNT-202609-001",
+    segmentId: 2,
+    segmentCode: "PRIM-0002",
+    designPressure: "1.6",
+    measuredPressure: "1.55",
+    inspector: "巡检队-王强",
+    reason: "阀门法兰轻微渗漏",
+    reportedAt: "2026-09-12 09:30",
+    completedAt: "2026-09-12 16:00",
+    result: "紧固法兰螺栓，复测压力正常",
+    status: "已完成",
+  },
+  {
+    id: 2,
+    orderNo: "MNT-202609-002",
+    segmentId: 3,
+    segmentCode: "PRIM-0003",
+    designPressure: "2.5",
+    measuredPressure: "2.41",
+    inspector: "巡检队-周海",
+    reason: "支线阀门保温层脱落复查",
+    reportedAt: "2026-10-01 14:20",
+    completedAt: "",
+    result: "",
+    status: "检修中",
+  },
+]
+
+// 阀门井待核查清单：检修结果同步过来的样例，已核查与待核查各留一笔。
+const SEED_VALVE_CHECKS: ValveCheckItem[] = [
+  {
+    id: "VALV-0002:1",
+    wellId: "VALV-0002",
+    segmentCode: "PRIM-0002",
+    orderNo: "MNT-202609-001",
+    result: "紧固法兰螺栓，复测压力正常",
+    syncedAt: "2026-09-12 16:00",
+    checked: true,
+    checkedAt: "2026-09-13 10:00",
+    checker: "阀门井班-李敏",
+    remark: "现场复核无渗漏",
+  },
+]
+
+export const SEED_STATE: SeedState = {
+  entries: SEED_ENTRIES,
+  maintenanceOrders: SEED_MAINTENANCE_ORDERS,
+  valveChecks: SEED_VALVE_CHECKS,
+}
+
+// 兼容旧引用：重置模块时仍按「条目清单」维度恢复。
+export const SEED_ROWS: Record<string, EntryRow[]> = SEED_ENTRIES

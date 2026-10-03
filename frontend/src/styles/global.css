@@ -35,3 +35,18 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+.success-text { color: #067647; }
+.section-title { font-size: 15px; margin: 18px 0 8px; }
+.sub-title { font-size: 14px; margin: 16px 0 6px; }
+.modal-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); display: flex; align-items: center; justify-content: center; z-index: 20; padding: 24px; }
+.modal { background: #fff; border-radius: 10px; padding: 18px 20px; width: 460px; max-width: 100%; max-height: 90vh; overflow: auto; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.2); }
+.modal-wide { width: 960px; }
+.modal-title { margin: 0 0 4px; font-size: 16px; }
+.modal-hint { margin: 0 0 12px; color: var(--muted); font-size: 12px; }
+.modal-form { display: flex; flex-direction: column; gap: 10px; }
+.form-item span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+.form-item input, .form-item textarea { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font: inherit; }
+.form-item textarea { resize: vertical; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.detail-table th { width: 140px; background: #f8fafc; }
+.is-checked td { color: var(--muted); }
