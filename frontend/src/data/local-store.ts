@@ -48,6 +48,14 @@ export function saveRows(key: string, rows: EntryRow[]): void {
   }
 }
 
+// 跨模块一次落库：登记检修这类要同时改多个模块的写入只持久化一次，避免半新半旧。
+export function saveAllRows(next: Record<string, EntryRow[]>): void {
+  cache = next
+  if (typeof window !== 'undefined' && window.localStorage) {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+  }
+}
+
 export function resetRows(key: string): EntryRow[] {
   const rows = clone(SEED_ROWS[key] ?? [])
   saveRows(key, rows)

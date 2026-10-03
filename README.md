@@ -68,4 +68,10 @@ npm run build
 - 字段、状态、动作与流转目标集中在 `frontend/src/data/modules.ts`；示例数据在
   `frontend/src/data/seed.ts`。
 - 状态流转只允许在 `local-service.ts` 里改，页面组件不做业务判断。
+- 一次管网「登记检修」走 `registerMaintenance`：先校验设计压力（0~4.0 MPa，无效先退回），
+  按 `modules.ts` 里的 `actionFrom` 挡回越级与已废弃管段，然后管段行、阀门井待核查同步、
+  检修单留底一次落库；同一份上报重复提交命中幂等键，只记一遍。
+- 管段详情、列表与导出清单读的都是 `listRows` 这同一份落库数据。
+- 检修单留底单独存在浏览器 `district-heating:maintenance-orders` 里，巡检队上报的实测值、
+  上报人、提交时间都在检修单上，可追溯。
 - 想回到初始数据：清掉浏览器里 `district-heating:entries` 这一项，或调用 `resetModule(模块)`。
